@@ -1,4 +1,4 @@
-local MESSAGE = 
+local MESSAGE =
 'It takes the average human %d minutes to fall\
 asleep. If you head to bed right now, you should\
 try to wake up at one of the following times:\
@@ -9,12 +9,15 @@ local CYCLES_ENDS_COUNT = 6
 local CYCLE_DURATION = 90
 local FALL_ASLEEP_DURATION = 14
 
-local function calculateCyclesEnds()
+local FALL_ASLEEP_DURATION_VAR = 'FallAsleepDuration'
+local CYCLE_DURATION_VAR = 'CycleDuration'
+
+local function calculateCyclesEnds(fallAsleepDuration, cycleDuration)
     cyclesEndsArray = {0, 0, 0, 0, 0, 0}
-    fallAsleepTime = os.time() + FALL_ASLEEP_DURATION * 60
-    
+    fallAsleepTime = os.time() + fallAsleepDuration * 60
+
     for i = 1, CYCLES_ENDS_COUNT do
-        wakeUpTime = fallAsleepTime + i * CYCLE_DURATION * 60
+        wakeUpTime = fallAsleepTime + i * cycleDuration * 60
         cyclesEndsArray[i] = os.date('%H:%M', wakeUpTime)
     end
 
@@ -26,8 +29,14 @@ local function setStringMeterText(meterName, text)
 end
 
 function Update()
-    cyclesEndsArray = calculateCyclesEnds()
+    fallAsleepDuration = SKIN:GetVariable(
+        FALL_ASLEEP_DURATION_VAR,
+        FALL_ASLEEP_DURATION
+    )
+    cycleDuration = SKIN:GetVariable(CYCLE_DURATION_VAR, CYCLE_DURATION)
+
+    cyclesEndsArray = calculateCyclesEnds(fallAsleepDuration, cycleDuration)
     cyclesEndsText = table.concat(cyclesEndsArray, ' or ')
-    messageText = string.format(MESSAGE, FALL_ASLEEP_DURATION, cyclesEndsText)
+    messageText = string.format(MESSAGE, fallAsleepDuration, cyclesEndsText)
     setStringMeterText("MainString", messageText)
 end
