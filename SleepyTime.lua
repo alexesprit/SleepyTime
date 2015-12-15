@@ -11,6 +11,7 @@ local FALL_ASLEEP_DURATION = 14
 
 local FALL_ASLEEP_DURATION_VAR = 'FallAsleepDuration'
 local CYCLE_DURATION_VAR = 'CycleDuration'
+local SIMPLE_MODE_VAR = 'SimpleMode'
 
 local function calculateCyclesEnds(fallAsleepDuration, cycleDuration)
     cyclesEndsArray = {0, 0, 0, 0, 0, 0}
@@ -37,6 +38,12 @@ function Update()
 
     cyclesEndsArray = calculateCyclesEnds(fallAsleepDuration, cycleDuration)
     cyclesEndsText = table.concat(cyclesEndsArray, ' or ')
-    messageText = string.format(MESSAGE, fallAsleepDuration, cyclesEndsText)
-    setStringMeterText("MainString", messageText)
+
+    simpleMode = SKIN:GetVariable(SIMPLE_MODE_VAR, 'False')
+    if simpleMode == 'False' then
+        messageText = string.format(MESSAGE, fallAsleepDuration, cyclesEndsText)
+        setStringMeterText("MainString", messageText)
+    elseif simpleMode == 'True' then
+        setStringMeterText("MainString", cyclesEndsText)
+    end
 end
