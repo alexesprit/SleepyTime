@@ -48,4 +48,6 @@ function Update()
     end
 
     setStringMeterText("MainString", cyclesEndsText)
+
+    SKIN:Bang('!UpdateMeter', 'MainString')
 end
